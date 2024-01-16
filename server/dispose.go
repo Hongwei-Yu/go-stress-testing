@@ -37,7 +37,9 @@ func Dispose(ctx context.Context, concurrency, totalNumber uint64, request *mode
 		wg          sync.WaitGroup // 发送数据完成
 		wgReceiving sync.WaitGroup // 数据处理完成
 	)
+	// 数据处理+1
 	wgReceiving.Add(1)
+	// 开一个goroutine处理
 	go statistics.ReceivingResults(concurrency, ch, &wgReceiving)
 
 	for i := uint64(0); i < concurrency; i++ {

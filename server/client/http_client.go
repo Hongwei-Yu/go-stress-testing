@@ -86,6 +86,7 @@ func HTTPRequest(chanID uint64, request *model.Request) (resp *http.Response, re
 	}
 
 	startTime := time.Now()
+	// 发送请求
 	resp, err = client.Do(req)
 	requestTime = uint64(helper.DiffNano(startTime))
 	if err != nil {

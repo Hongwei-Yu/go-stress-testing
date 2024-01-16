@@ -69,6 +69,7 @@ func init() {
 //
 //go:generate go build main.go
 func main() {
+	// 设置(逻辑CPU数量)
 	runtime.GOMAXPROCS(cpuNumber)
 	if concurrency == 0 || totalNumber == 0 || (requestURL == "" && path == "") {
 		fmt.Printf("示例: go run main.go -c 1 -n 1 -u https://www.baidu.com/ \n")
@@ -78,25 +79,29 @@ func main() {
 		return
 	}
 	debug := strings.ToLower(debugStr) == "true"
+	// 生成请求体
 	request, err := model.NewRequest(requestURL, verify, code, 0, debug, path, headers, body, maxCon, http2, keepalive)
 	if err != nil {
 		fmt.Printf("参数不合法 %v \n", err)
 		return
 	}
 	fmt.Printf("\n 开始启动  并发数:%d 请求数:%d 请求参数: \n", concurrency, totalNumber)
+	//打印request请求
 	request.Print()
 
 	// 开始处理
 	ctx := context.Background()
 	if timeout > 0 {
 		var cancel context.CancelFunc
-		ctx, cancel = context.WithTimeout(ctx, time.Duration(timeout)*time.Second)
+		ctx, cancel = context.WithTimeout(ctx, time.Duration(timeout)*time.Second) // 通过context设置超时时间
 		defer cancel()
+		// 返回deadline并打印
 		deadline, ok := ctx.Deadline()
 		if ok {
 			fmt.Printf(" deadline %s", deadline)
 		}
 	}
+	// 请求处理函数
 	server.Dispose(ctx, concurrency, totalNumber, request)
 	return
 }

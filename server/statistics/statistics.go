@@ -44,6 +44,7 @@ func ReceivingResults(concurrent uint64, ch <-chan *model.RequestResults, wg *sy
 		receivedBytes  int64
 		mutex          = sync.RWMutex{}
 	)
+	// 获取现在的时间戳
 	statTime := uint64(time.Now().UnixNano())
 	// 错误码/错误个数
 	var errCode = &sync.Map{}
